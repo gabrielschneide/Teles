@@ -146,15 +146,18 @@ function exportToPDF() {
 
     // Adicionar título
     doc.setFontSize(24);
+    doc.setFont('helvetica', 'bold');
     doc.text("Relatório de Atividades", 105, 20, null, null, 'center');
 
     // Adicionar data de exportação
     const exportDate = new Date().toLocaleDateString();
     doc.setFontSize(12);
+    doc.setFont('helvetica', 'normal');
     doc.text(`Data de Exportação: ${exportDate}`, 170, 30, null, null, 'right');
 
     // Adicionar cabeçalho da tabela
     doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
     doc.text("Data", 20, 40);
     doc.text("Tipo", 50, 40);
     doc.text("Ordem", 80, 40);
@@ -163,6 +166,10 @@ function exportToPDF() {
     doc.text("Mantenedor", 190, 40);
     doc.text("Observação", 230, 40);
 
+    // Adicionar linha horizontal abaixo do cabeçalho
+    doc.setLineWidth(0.5);
+    doc.line(20, 42, 270, 42);
+
     // Adicionar dados da tabela
     const table = document.getElementById('manualTable');
     const rows = table.querySelectorAll('tbody tr');
@@ -170,6 +177,8 @@ function exportToPDF() {
 
     rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
         doc.text(cells[0].textContent, 20, y);
         doc.text(cells[1].textContent, 50, y);
         doc.text(cells[2].textContent, 80, y);
@@ -184,6 +193,8 @@ function exportToPDF() {
             doc.addPage();
             y = 20;
             // Adicionar cabeçalho da tabela na nova página
+            doc.setFontSize(12);
+            doc.setFont('helvetica', 'bold');
             doc.text("Data", 20, y);
             doc.text("Tipo", 50, y);
             doc.text("Ordem", 80, y);
@@ -191,6 +202,10 @@ function exportToPDF() {
             doc.text("Wise", 160, y);
             doc.text("Mantenedor", 190, y);
             doc.text("Observação", 230, y);
+            y += 10;
+            // Adicionar linha horizontal abaixo do cabeçalho
+            doc.setLineWidth(0.5);
+            doc.line(20, y, 270, y);
             y += 10;
         }
     });
