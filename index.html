@@ -3,110 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Relatórios</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>Armazenamento de Relatórios</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
-        <header class="main-header">
-            <h1><i class="fas fa-file-alt"></i> Gestão de Relatórios Técnicos</h1>
-        </header>
-
-        <section class="card import-section">
-            <div class="card-header">
-                <h2><i class="fas fa-file-import"></i> Importar Dados do Excel</h2>
-                <div class="file-input-container">
-                    <input type="file" id="fileInput" accept=".xlsx, .xls" hidden>
-                    <label for="fileInput" class="btn primary">
-                        <i class="fas fa-upload"></i> Selecionar Arquivo
-                    </label>
-                    <button onclick="importData()" class="btn success">
-                        <i class="fas fa-file-import"></i> Importar Dados
-                    </button>
-                </div>
-            </div>
-            <div class="table-container">
-                <table id="importedTable">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Atividade</th>
-                            <th>WISE</th>
-                            <th>Mantenedor</th>
-                            <th>Observações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section class="card manual-section">
-            <div class="card-header">
-                <h2><i class="fas fa-edit"></i> Cadastro Manual</h2>
-            </div>
-            <form id="manualForm" class="grid-form">
-                <div class="form-group">
-                    <label for="data">Data:</label>
-                    <input type="date" id="data" required>
-                </div>
-                <div class="form-group">
-                    <label for="tipo">Tipo:</label>
-                    <select id="tipo" required>
-                        <option value="">Selecione...</option>
-                        <option>Preventiva</option>
-                        <option>Corretiva</option>
-                        <option>Preditiva</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="atividade">Atividade:</label>
-                    <input type="text" id="atividade" required>
-                </div>
-                <div class="form-group">
-                    <label for="wise">WISE:</label>
-                    <input type="text" id="wise" required>
-                </div>
-                <div class="form-group">
-                    <label for="mantenedor">Mantenedor:</label>
-                    <input type="text" id="mantenedor" required>
-                </div>
-                <div class="form-group full-width">
-                    <label for="observacao">Observações:</label>
-                    <textarea id="observacao" rows="3"></textarea>
-                </div>
-                <div class="form-group full-width">
-                    <button type="button" onclick="addManualData()" class="btn primary">
-                        <i class="fas fa-plus-circle"></i> Adicionar Registro
-                    </button>
-                </div>
+        <h1>Armazenamento de Relatórios</h1>
+        <div class="section">
+            <h2>Importar Dados do Excel</h2>
+            <input type="file" id="fileInput" accept=".xlsx, .xls">
+            <button onclick="importData()">Importar Dados</button>
+            <table id="importedTable">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Ordem</th>
+                        <th>Atividade</th>
+                        <th>Wise</th>
+                        <th>Mantenedor</th>
+                        <th>Checklist</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas serão inseridas aqui -->
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2>Adicionar Dados Manualmente</h2>
+            <form id="manualForm">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <label for="tipo">Tipo:</label>
+                <input type="text" id="tipo" name="tipo" required>
+                <label for="atividade">Atividade:</label>
+                <input type="text" id="atividade" name="atividade" required>
+                <label for="wise">Wise:</label>
+                <input type="text" id="wise" name="wise" required>
+                <label for="mantenedor">Mantenedor:</label>
+                <input type="text" id="mantenedor" name="mantenedor" required>
+                <label for="observacao">Observação:</label>
+                <textarea id="observacao" name="observacao" required></textarea>
+                <button type="button" onclick="addManualData()">Adicionar</button>
             </form>
-
-            <div class="table-actions">
-                <button onclick="exportToPDF()" class="btn danger">
-                    <i class="fas fa-file-pdf"></i> Exportar PDF
-                </button>
-            </div>
-            <div class="table-container">
-                <table id="manualTable">
-                    <thead>
-                        <tr>
-                            <th>Data</th>
-                            <th>Tipo</th>
-                            <th>Atividade</th>
-                            <th>WISE</th>
-                            <th>Mantenedor</th>
-                            <th>Observações</th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </section>
+            <table id="manualTable">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Atividade</th>
+                        <th>Wise</th>
+                        <th>Mantenedor</th>
+                        <th>Observação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas serão inseridas aqui -->
+                </tbody>
+            </table>
+            <button onclick="exportToPDF()">Exportar para PDF</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
