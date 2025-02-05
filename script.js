@@ -23,23 +23,23 @@ const PDF_CONFIG = {
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF(PDF_CONFIG.orientation, 'mm', PDF_CONFIG.pageSize);
-    
+
     let currentY = PDF_CONFIG.margin;
     const pageWidth = doc.internal.pageSize.getWidth();
     const contentWidth = pageWidth - (PDF_CONFIG.margin * 2);
 
     // Adicionar cabeçalho
     currentY = addHeader(doc, currentY, pageWidth);
-    
+
     // Adicionar informações do relatório
     currentY = addReportInfo(doc, currentY);
-    
+
     // Adicionar tabela de dados
     currentY = addDataTable(doc, currentY, contentWidth);
-    
+
     // Adicionar rodapé
     addFooter(doc, pageWidth);
-    
+
     // Salvar o PDF
     doc.save(`relatorio_${new Date().toISOString().slice(0,10)}.pdf`);
 }
@@ -54,7 +54,7 @@ function addHeader(doc, currentY, pageWidth) {
     doc.setFontSize(PDF_CONFIG.fontSizes.subtitle);
     doc.setTextColor(PDF_CONFIG.colors.text);
     doc.text("Relatório gerado automaticamente pelo sistema", pageWidth / 2, currentY, { align: 'center' });
-    
+
     return currentY + 15;
 }
 
@@ -88,7 +88,7 @@ function addDataTable(doc, currentY, contentWidth) {
 
     headers.forEach((header, index) => {
         doc.rect(PDF_CONFIG.margin + (index * columnWidth), currentY, columnWidth, rowHeight, 'F');
-        doc.text(header, PDF_CONFIG.margin + (index * columnWidth) + columnWidth / 2, currentY + rowHeight / 2 + 2, { align: 'center' });
+        doc.text(header, PDF_CONFIG.margin + (index * columnWidth) + columnWidth / 2, currentY + rowHeight / 2, { align: 'center' });
     });
 
     currentY += rowHeight;
@@ -103,13 +103,13 @@ function addDataTable(doc, currentY, contentWidth) {
             currentY = PDF_CONFIG.margin;
             headers.forEach((header, index) => {
                 doc.rect(PDF_CONFIG.margin + (index * columnWidth), currentY, columnWidth, rowHeight, 'F');
-                doc.text(header, PDF_CONFIG.margin + (index * columnWidth) + columnWidth / 2, currentY + rowHeight / 2 + 2, { align: 'center' });
+                doc.text(header, PDF_CONFIG.margin + (index * columnWidth) + columnWidth / 2, currentY + rowHeight / 2, { align: 'center' });
             });
             currentY += rowHeight;
         }
 
         cells.forEach((cell, index) => {
-            doc.text(cell.textContent, PDF_CONFIG.margin + (index * columnWidth) + 2, currentY + rowHeight / 2 + 2, { maxWidth: columnWidth - 4 });
+            doc.text(cell.textContent, PDF_CONFIG.margin + (index * columnWidth) + columnWidth / 2, currentY + rowHeight / 2, { align: 'center', maxWidth: columnWidth - 4 });
             doc.rect(PDF_CONFIG.margin + (index * columnWidth), currentY, columnWidth, rowHeight);
         });
 
