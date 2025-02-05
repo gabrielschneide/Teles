@@ -29,6 +29,23 @@
                 <!-- Linhas serão inseridas aqui -->
             </tbody>
         </table>
+        <h2>Adicionar Dados Manualmente</h2>
+        <form id="manualForm">
+            <label for="data">Data:</label>
+            <input type="date" id="data" name="data" required>
+            <label for="tipo">Tipo:</label>
+            <input type="text" id="tipo" name="tipo" required>
+            <label for="ordem">Ordem:</label>
+            <input type="text" id="ordem" name="ordem" required>
+            <label for="atividade">Atividade:</label>
+            <input type="text" id="atividade" name="atividade" required>
+            <label for="wise">Wise:</label>
+            <input type="text" id="wise" name="wise" required>
+            <label for="mantenedor">Mantenedor:</label>
+            <input type="text" id="mantenedor" name="mantenedor" required>
+            <button type="button" onclick="addManualData()">Adicionar</button>
+        </form>
+        <button onclick="exportToExcel()">Exportar para Excel</button>
     </div>
     <script src="script.js"></script>
 </body>
