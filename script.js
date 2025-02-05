@@ -133,23 +133,42 @@ function addDataTable(doc, currentY, contentWidth) {
         if (currentY + rowHeight > doc.internal.pageSize.getHeight() - PDF_CONFIG.margin) {
             doc.addPage();
             currentY = PDF_CONFIG.margin;
+
+            // Redesenhar cabeçalho na nova página
+            headers.forEach((header, index) => {
+                doc.rect(
+                    PDF_CONFIG.margin + (index * columnWidth),
+                    currentY,
+                    columnWidth,
+                    rowHeight,
+                    'F'
+                );
+                doc.text(
+                    header,
+                    PDF_CONFIG.margin + (index * columnWidth) + 2,
+                    currentY + rowHeight / 2 + 2
+                );
+            });
+            currentY += rowHeight;
         }
 
         cells.forEach((cell, index) => {
-            doc.text(
-                cell.textContent,
-                PDF_CONFIG.margin + (index * columnWidth) + 2,
-                currentY + rowHeight / 2 + 2,
-                { maxWidth: columnWidth - 4 }
-            );
+            if (index < columnCount - 1) { // Ignorar a coluna de ações
+                doc.text(
+                    cell.textContent,
+                    PDF_CONFIG.margin + (index * columnWidth) + 2,
+                    currentY + rowHeight / 2 + 2,
+                    { maxWidth: columnWidth - 4 }
+                );
 
-            // Bordas da célula
-            doc.rect(
-                PDF_CONFIG.margin + (index * columnWidth),
-                currentY,
-                columnWidth,
-                rowHeight
-            );
+                // Bordas da célula
+                doc.rect(
+                    PDF_CONFIG.margin + (index * columnWidth),
+                    currentY,
+                    columnWidth,
+                    rowHeight
+                );
+            }
         });
 
         currentY += rowHeight;
