@@ -33,30 +33,24 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.card {
+.section {
     background: white;
     border-radius: 12px;
     box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
     margin-bottom: 2rem;
-    overflow: hidden;
+    padding: 2rem;
 }
 
-.card-header {
-    padding: 1.5rem;
-    background: var(--primary-color);
-    color: white;
+.file-input-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
     gap: 1rem;
+    margin-bottom: 1rem;
 }
 
 .grid-form {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
-    padding: 1.5rem;
 }
 
 .form-group {
@@ -123,7 +117,7 @@ input:focus, select:focus, textarea:focus {
 
 .table-container {
     overflow-x: auto;
-    padding: 1.5rem;
+    margin-top: 1rem;
 }
 
 table {
@@ -160,6 +154,16 @@ tr:hover {
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
     border-radius: 4px;
+    background: var(--danger-color);
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.actions-cell button:hover {
+    background: #d9534f;
+    transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {
@@ -167,15 +171,8 @@ tr:hover {
         grid-template-columns: 1fr;
     }
 
-    .card-header {
-        flex-direction: column;
-        gap: 1rem;
-    }
-
     .file-input-container {
-        display: flex;
         flex-direction: column;
         gap: 1rem;
-        width: 100%;
     }
 }
