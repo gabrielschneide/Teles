@@ -1,20 +1,23 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    background-color: #f9f9f9;
     margin: 0;
     padding: 0;
+    color: #333;
 }
 
 .container {
     width: 80%;
     margin: 50px auto;
     background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 40px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
 }
 
 h1, h2 {
     text-align: center;
+    color: #007BFF;
     margin-bottom: 20px;
 }
 
@@ -26,16 +29,21 @@ table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 th, td {
     border: 1px solid #ddd;
-    padding: 8px;
+    padding: 12px;
     text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
+    background-color: #007BFF;
+    color: white;
+    font-weight: bold;
 }
 
 input[type="file"], input[type="text"], input[type="date"], textarea, button {
@@ -43,6 +51,9 @@ input[type="file"], input[type="text"], input[type="date"], textarea, button {
     padding: 10px;
     width: calc(100% - 22px);
     box-sizing: border-box;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
 }
 
 button {
@@ -50,8 +61,14 @@ button {
     color: white;
     border: none;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 button:hover {
     background-color: #0056b3;
+}
+
+textarea {
+    height: 100px;
+    resize: vertical;
 }
