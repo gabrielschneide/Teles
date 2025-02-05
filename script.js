@@ -23,24 +23,24 @@ const PDF_CONFIG = {
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF(PDF_CONFIG.orientation, 'mm', PDF_CONFIG.pageSize);
-    
+
     // Configurações iniciais
     let currentY = PDF_CONFIG.margin;
     const pageWidth = doc.internal.pageSize.getWidth();
     const contentWidth = pageWidth - (PDF_CONFIG.margin * 2);
-    
+
     // Adicionar cabeçalho
     currentY = addHeader(doc, currentY, pageWidth);
-    
+
     // Adicionar informações do relatório
     currentY = addReportInfo(doc, currentY);
-    
+
     // Adicionar tabela de dados
     currentY = addDataTable(doc, currentY, contentWidth);
-    
+
     // Adicionar rodapé
     addFooter(doc, pageWidth);
-    
+
     // Salvar o PDF
     doc.save(`relatorio_${new Date().toISOString().slice(0,10)}.pdf`);
 }
@@ -50,39 +50,39 @@ function addHeader(doc, currentY, pageWidth) {
     doc.setFontSize(PDF_CONFIG.fontSizes.title);
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(PDF_CONFIG.colors.primary);
-    
+
     // Título principal
     doc.text("Relatório Técnico de Atividades", pageWidth / 2, currentY, { align: 'center' });
     currentY += 10;
-    
+
     // Subtítulo
     doc.setFontSize(PDF_CONFIG.fontSizes.subtitle);
     doc.setTextColor(PDF_CONFIG.colors.text);
     doc.text("Relatório gerado automaticamente pelo sistema", pageWidth / 2, currentY, { align: 'center' });
-    
+
     return currentY + 15;
 }
 
 function addReportInfo(doc, currentY) {
     doc.setFontSize(PDF_CONFIG.fontSizes.body);
     doc.setFont('helvetica', 'normal');
-    
+
     // Informações do relatório
     const reportDate = new Date().toLocaleDateString('pt-BR', {
         day: '2-digit',
         month: 'long',
         year: 'numeric'
     });
-    
+
     const reportInfo = [
         `Data de emissão: ${reportDate}`,
         `Total de registros: ${document.querySelectorAll('#manualTable tbody tr').length}`
     ];
-    
+
     reportInfo.forEach((info, index) => {
         doc.text(info, PDF_CONFIG.margin, currentY + (index * PDF_CONFIG.lineHeight));
     });
-    
+
     return currentY + (reportInfo.length * PDF_CONFIG.lineHeight) + 10;
 }
 
@@ -90,18 +90,18 @@ function addDataTable(doc, currentY, contentWidth) {
     const table = document.getElementById('manualTable');
     const headers = Array.from(table.querySelectorAll('thead th')).map(th => th.textContent);
     const rows = table.querySelectorAll('tbody tr');
-    
+
     // Configurações da tabela
     const columnCount = headers.length;
     const columnWidth = contentWidth / columnCount;
     const rowHeight = PDF_CONFIG.lineHeight * 1.5;
-    
+
     // Estilo do cabeçalho
     doc.setFontSize(PDF_CONFIG.fontSizes.header);
     doc.setFont('helvetica', 'bold');
     doc.setFillColor(PDF_CONFIG.colors.primary);
     doc.setTextColor('#ffffff');
-    
+
     // Desenhar cabeçalho
     headers.forEach((header, index) => {
         doc.rect(
@@ -117,24 +117,24 @@ function addDataTable(doc, currentY, contentWidth) {
             currentY + rowHeight / 2 + 2
         );
     });
-    
+
     currentY += rowHeight;
-    
+
     // Estilo do conteúdo
     doc.setFontSize(PDF_CONFIG.fontSizes.body);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(PDF_CONFIG.colors.text);
-    
+
     // Desenhar linhas
     rows.forEach(row => {
         const cells = Array.from(row.querySelectorAll('td'));
-        
+
         // Verificar se precisa de nova página
         if (currentY + rowHeight > doc.internal.pageSize.getHeight() - PDF_CONFIG.margin) {
             doc.addPage();
             currentY = PDF_CONFIG.margin;
         }
-        
+
         cells.forEach((cell, index) => {
             doc.text(
                 cell.textContent,
@@ -142,7 +142,7 @@ function addDataTable(doc, currentY, contentWidth) {
                 currentY + rowHeight / 2 + 2,
                 { maxWidth: columnWidth - 4 }
             );
-            
+
             // Bordas da célula
             doc.rect(
                 PDF_CONFIG.margin + (index * columnWidth),
@@ -151,10 +151,10 @@ function addDataTable(doc, currentY, contentWidth) {
                 rowHeight
             );
         });
-        
+
         currentY += rowHeight;
     });
-    
+
     return currentY + 10;
 }
 
@@ -162,16 +162,16 @@ function addFooter(doc, pageWidth) {
     doc.setFontSize(PDF_CONFIG.fontSizes.body - 2);
     doc.setFont('helvetica', 'italic');
     doc.setTextColor(PDF_CONFIG.colors.text);
-    
+
     const footerText = `Gerado automaticamente pelo Sistema de Gestão de Relatórios - Página ${doc.internal.getNumberOfPages()}`;
-    
+
     doc.text(
         footerText,
         pageWidth / 2,
         doc.internal.pageSize.getHeight() - PDF_CONFIG.margin + 5,
         { align: 'center' }
     );
-    
+
     // Linha do rodapé
     doc.setLineWidth(0.2);
     doc.line(
@@ -180,4 +180,66 @@ function addFooter(doc, pageWidth) {
         pageWidth - PDF_CONFIG.margin,
         doc.internal.pageSize.getHeight() - PDF_CONFIG.margin
     );
+}
+
+function importData() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+    if (!file) {
+        alert('Por favor, selecione um arquivo.');
+        return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const data = new Uint8Array(e.target.result);
+        const workbook = XLSX.read(data, { type: 'array' });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+        const table = document.getElementById('importedTable').querySelector('tbody');
+        table.innerHTML = '';
+
+        jsonData.forEach((row, index) => {
+            if (index === 0) return; // Ignorar a primeira linha (cabeçalho)
+            const tr = document.createElement('tr');
+            row.forEach(cell => {
+                const td = document.createElement('td');
+                td.textContent = cell;
+                tr.appendChild(td);
+            });
+            table.appendChild(tr);
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
+
+function addManualData() {
+    const data = document.getElementById('data').value;
+    const tipo = document.getElementById('tipo').value;
+    const atividade = document.getElementById('atividade').value;
+    const wise = document.getElementById('wise').value;
+    const mantenedor = document.getElementById('mantenedor').value;
+    const observacao = document.getElementById('observacao').value;
+
+    if (!data || !tipo || !atividade || !wise || !mantenedor) {
+        alert('Por favor, preencha todos os campos.');
+        return;
+    }
+
+    const table = document.getElementById('manualTable').querySelector('tbody');
+    const tr = document.createElement('tr');
+    const cells = [data, tipo, atividade, wise, mantenedor, observacao];
+
+    cells.forEach(cell => {
+        const td = document.createElement('td');
+        td.textContent = cell;
+        tr.appendChild(td);
+    });
+
+    table.appendChild(tr);
+
+    // Limpar o formulário
+    document.getElementById('manualForm').reset();
 }
