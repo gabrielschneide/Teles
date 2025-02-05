@@ -144,14 +144,35 @@ function exportToPDF() {
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
-    const table = document.getElementById('manualTable');
-    const rows = table.querySelectorAll('tr');
+    // Adicionar título
+    doc.setFontSize(20);
+    doc.text("Relatório de Atividades", 105, 20, null, null, 'center');
 
-    rows.forEach((row, index) => {
+    // Adicionar cabeçalho da tabela
+    doc.setFontSize(12);
+    doc.text("Data", 10, 30);
+    doc.text("Tipo", 50, 30);
+    doc.text("Ordem", 90, 30);
+    doc.text("Atividade", 130, 30);
+    doc.text("Wise", 180, 30);
+    doc.text("Mantenedor", 220, 30);
+    doc.text("Observação", 270, 30);
+
+    // Adicionar dados da tabela
+    const table = document.getElementById('manualTable');
+    const rows = table.querySelectorAll('tbody tr');
+    let y = 40;
+
+    rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
-        cells.forEach((cell, cellIndex) => {
-            doc.text(cell.textContent, 10, 10 + index * 10, { maxWidth: 190 });
-        });
+        doc.text(cells[0].textContent, 10, y);
+        doc.text(cells[1].textContent, 50, y);
+        doc.text(cells[2].textContent, 90, y);
+        doc.text(cells[3].textContent, 130, y);
+        doc.text(cells[4].textContent, 180, y);
+        doc.text(cells[5].textContent, 220, y);
+        doc.text(cells[6].textContent, 270, y, { maxWidth: 180 });
+        y += 10;
     });
 
     doc.save('relatorio.pdf');
