@@ -223,4 +223,4 @@ function exportToPDF() {
     });
 
     doc.save('relatorio.pdf');
-             }
+                            }
