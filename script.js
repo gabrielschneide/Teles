@@ -182,6 +182,12 @@ function addFooter(doc, pageWidth) {
     );
 }
 
+function convertSerialToDate(serial) {
+    const baseDate = new Date(1899, 11, 30); // Data base do Excel (30/12/1899)
+    const date = new Date(baseDate.getTime() + serial * 24 * 60 * 60 * 1000);
+    return date.toLocaleDateString(); // Formata a data para o formato local
+}
+
 function importData() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -194,52 +200,125 @@ function importData() {
     reader.onload = function(e) {
         const data = new Uint8Array(e.target.result);
         const workbook = XLSX.read(data, { type: 'array' });
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const firstSheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[firstSheetName];
         const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-
-        const table = document.getElementById('importedTable').querySelector('tbody');
-        table.innerHTML = '';
-
-        jsonData.forEach((row, index) => {
-            if (index === 0) return; // Ignorar a primeira linha (cabeçalho)
-            const tr = document.createElement('tr');
-            row.forEach(cell => {
-                const td = document.createElement('td');
-                td.textContent = cell;
-                tr.appendChild(td);
-            });
-            table.appendChild(tr);
-        });
+        populateImportedTable(jsonData);
     };
     reader.readAsArrayBuffer(file);
 }
 
-function addManualData() {
-    const data = document.getElementById('data').value;
-    const tipo = document.getElementById('tipo').value;
-    const atividade = document.getElementById('atividade').value;
-    const wise = document.getElementById('wise').value;
-    const mantenedor = document.getElementById('mantenedor').value;
-    const observacao = document.getElementById('observacao').value;
+function populateImportedTable(data) {
+    const tableBody = document.querySelector('#importedTable tbody');
+    tableBody.innerHTML = '';
+    data.forEach((row, index) => {
+        if (index === 0) return; // Ignora a primeira linha (cabeçalho)
+        const tr = document.createElement('tr');
+        row.forEach((cell, cellIndex) => {
+            const td = document.createElement('td');
+            if (cellIndex === 0) {
+                td.textContent = convertSerialToDate(cell);
+            } else {
+                td.textContent = cell;
+            }
+            tr.appendChild(td);
+        });
+        const checklistTd = document.createElement('td');
+        const checklistInput = document.createElement('input');
+        checklistInput.type = 'checkbox';
+        checklistTd.appendChild(checklistInput);
+        tr.appendChild(checklistTd);
 
-    if (!data || !tipo || !atividade || !wise || !mantenedor) {
-        alert('Por favor, preencha todos os campos.');
-        return;
-    }
+        const actionsTd = document.createElement('td');
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Editar';
+        editButton.onclick = () => editRow(tr);
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Excluir';
+        deleteButton.onclick = () => deleteRow(tr);
+        actionsTd.appendChild(editButton);
+        actionsTd.appendChild(deleteButton);
+        tr.appendChild(actionsTd);
 
-    const table = document.getElementById('manualTable').querySelector('tbody');
-    const tr = document.createElement('tr');
-    const cells = [data, tipo, atividade, wise, mantenedor, observacao];
-
-    cells.forEach(cell => {
-        const td = document.createElement('td');
-        td.textContent = cell;
-        tr.appendChild(td);
+        tableBody.appendChild(tr);
     });
+}
 
-    table.appendChild(tr);
+function editRow(row) {
+    const cells = row.cells;
+    for (let i = 0; i < cells.length - 2; i++) {
+        const cell = cells[i];
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.value = cell.textContent;
+        cell.textContent = '';
+        cell.appendChild(input);
+    }
+    const saveButton = document.createElement('button');
+    saveButton.textContent = 'Salvar';
+    saveButton.onclick = () => saveRow(row);
+    cells[cells.length - 1].appendChild(saveButton);
+}
 
-    // Limpar o formulário
-    document.getElementById('manualForm').reset();
+function saveRow(row) {
+    const cells = row.cells;
+    for (let i = 0; i < cells.length - 2; i++) {
+        const cell = cells[i];
+        const input = cell.querySelector('input');
+        cell.textContent = input.value;
+    }
+    const saveButton = cells[cells.length - 1].querySelector('button');
+    cells[cells.length - 1].removeChild(saveButton);
+}
+
+function deleteRow(row) {
+    row.remove();
+}
+
+function addManualData() {
+    const form = document.getElementById('manualForm');
+    const data = new FormData(form);
+
+    const tableBody = document.querySelector('#manualTable tbody');
+    const tr = document.createElement('tr');
+
+    const date = new Date(data.get('data'));
+    const dateTd = document.createElement('td');
+    dateTd.textContent = date.toLocaleDateString();
+    tr.appendChild(dateTd);
+
+    const tipoTd = document.createElement('td');
+    tipoTd.textContent = data.get('tipo');
+    tr.appendChild(tipoTd);
+
+    const atividadeTd = document.createElement('td');
+    atividadeTd.textContent = data.get('atividade');
+    tr.appendChild(atividadeTd);
+
+    const wiseTd = document.createElement('td');
+    wiseTd.textContent = data.get('wise');
+    tr.appendChild(wiseTd);
+
+    const mantenedorTd = document.createElement('td');
+    mantenedorTd.textContent = data.get('mantenedor');
+    tr.appendChild(mantenedorTd);
+
+    const observacaoTd = document.createElement('td');
+    observacaoTd.textContent = data.get('observacao');
+    tr.appendChild(observacaoTd);
+
+    const actionsTd = document.createElement('td');
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Editar';
+    editButton.onclick = () => editRow(tr);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Excluir';
+    deleteButton.onclick = () => deleteRow(tr);
+    actionsTd.appendChild(editButton);
+    actionsTd.appendChild(deleteButton);
+    tr.appendChild(actionsTd);
+
+    tableBody.appendChild(tr);
+
+    form.reset();
 }
