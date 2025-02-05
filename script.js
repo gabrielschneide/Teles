@@ -1,3 +1,10 @@
+function convertSerialToDate(serial) {
+    // Converte um número serial do Excel para uma data JavaScript
+    const baseDate = new Date(1899, 11, 30); // Data base do Excel (30/12/1899)
+    const date = new Date(baseDate.getTime() + serial * 24 * 60 * 60 * 1000);
+    return date.toLocaleDateString(); // Formata a data para o formato local
+}
+
 function importData() {
     const fileInput = document.getElementById('fileInput');
     const file = fileInput.files[0];
@@ -21,9 +28,14 @@ function populateTable(data) {
     data.forEach((row, index) => {
         if (index === 0) return; // Ignora a primeira linha (cabeçalho)
         const tr = document.createElement('tr');
-        row.forEach(cell => {
+        row.forEach((cell, cellIndex) => {
             const td = document.createElement('td');
-            td.textContent = cell;
+            if (cellIndex === 0) {
+                // Converte a primeira coluna (data)
+                td.textContent = convertSerialToDate(cell);
+            } else {
+                td.textContent = cell;
+            }
             tr.appendChild(td);
         });
         const checklistTd = document.createElement('td');
