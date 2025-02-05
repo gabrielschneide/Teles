@@ -142,36 +142,41 @@ function addManualData() {
 
 function exportToPDF() {
     const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
+    const doc = new jsPDF('landscape');
 
     // Adicionar título
-    doc.setFontSize(20);
+    doc.setFontSize(24);
     doc.text("Relatório de Atividades", 105, 20, null, null, 'center');
+
+    // Adicionar data de exportação
+    const exportDate = new Date().toLocaleDateString();
+    doc.setFontSize(12);
+    doc.text(`Data de Exportação: ${exportDate}`, 190, 30, null, null, 'right');
 
     // Adicionar cabeçalho da tabela
     doc.setFontSize(12);
-    doc.text("Data", 10, 30);
-    doc.text("Tipo", 50, 30);
-    doc.text("Ordem", 90, 30);
-    doc.text("Atividade", 130, 30);
-    doc.text("Wise", 180, 30);
-    doc.text("Mantenedor", 220, 30);
-    doc.text("Observação", 270, 30);
+    doc.text("Data", 10, 40);
+    doc.text("Tipo", 40, 40);
+    doc.text("Ordem", 70, 40);
+    doc.text("Atividade", 100, 40);
+    doc.text("Wise", 150, 40);
+    doc.text("Mantenedor", 180, 40);
+    doc.text("Observação", 220, 40);
 
     // Adicionar dados da tabela
     const table = document.getElementById('manualTable');
     const rows = table.querySelectorAll('tbody tr');
-    let y = 40;
+    let y = 50;
 
     rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
         doc.text(cells[0].textContent, 10, y);
-        doc.text(cells[1].textContent, 50, y);
-        doc.text(cells[2].textContent, 90, y);
-        doc.text(cells[3].textContent, 130, y);
-        doc.text(cells[4].textContent, 180, y);
-        doc.text(cells[5].textContent, 220, y);
-        doc.text(cells[6].textContent, 270, y, { maxWidth: 180 });
+        doc.text(cells[1].textContent, 40, y);
+        doc.text(cells[2].textContent, 70, y);
+        doc.text(cells[3].textContent, 100, y);
+        doc.text(cells[4].textContent, 150, y);
+        doc.text(cells[5].textContent, 180, y);
+        doc.text(cells[6].textContent, 220, y, { maxWidth: 180 });
         y += 10;
     });
 
