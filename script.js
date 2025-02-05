@@ -146,81 +146,54 @@ function exportToPDF() {
 
     // Adicionar título
     doc.setFontSize(24);
-    doc.text("RELATÓRIO MENSAL", 105, 20, null, null, 'center');
+    doc.text("Relatório de Atividades", 105, 20, null, null, 'center');
 
-    // Adicionar data de criação
-    const creationDate = new Date().toLocaleDateString();
+    // Adicionar data de exportação
+    const exportDate = new Date().toLocaleDateString();
     doc.setFontSize(12);
-    doc.text(`Data de Criação: ${creationDate}`, 170, 28, null, null, 'right');
+    doc.text(`Data de Exportação: ${exportDate}`, 170, 30, null, null, 'right');
 
-    // Adicionar nome do responsável
-    doc.text("Nome do Responsável:", 20, 40);
-    doc.text("Para o mês de:", 140, 40);
-
-    // Adicionar checklist
-    doc.setFontSize(14);
-    doc.text("CHECKLIST GERAL", 20, 55);
-
-    const checklistItems = [
-        "1. O sistema de ponto está sendo utilizado corretamente?",
-        "2. Todos os funcionários estão utilizando o EPI corretamente?",
-        "3. As áreas de trabalho estão organizadas e limpas?",
-        "4. Os equipamentos estão em boas condições de uso?"
-    ];
-
-    let y = 65;
-    checklistItems.forEach((item, index) => {
-        doc.text(item, 25, y);
-        doc.rect(20, y - 2, 5, 5); // Checkbox
-        y += 10;
-    });
-
-    // Adicionar seção de finalização
-    doc.setFontSize(16);
-    doc.text("FINALIZADO", 20, y + 20);
-    doc.rect(20, y + 18, 170, 50); // Caixa de texto
-
-    // Adicionar seção de anexamento
-    doc.text("EM ANEXAMENTO", 20, y + 80);
-    doc.rect(20, y + 78, 170, 50); // Caixa de texto
-
-    // Adicionar seção de atestado
-    doc.text("ATESTADO / NÃO FEITO", 20, y + 130);
-    doc.rect(20, y + 128, 170, 50); // Caixa de texto
+    // Adicionar cabeçalho da tabela
+    doc.setFontSize(12);
+    doc.text("Data", 20, 40);
+    doc.text("Tipo", 50, 40);
+    doc.text("Ordem", 80, 40);
+    doc.text("Atividade", 110, 40);
+    doc.text("Wise", 160, 40);
+    doc.text("Mantenedor", 190, 40);
+    doc.text("Observação", 230, 40);
 
     // Adicionar dados da tabela
     const table = document.getElementById('manualTable');
     const rows = table.querySelectorAll('tbody tr');
-    let pageHeight = doc.internal.pageSize.getHeight();
-    let startY = y + 190;
+    let y = 50;
 
-    doc.addPage();
-    doc.setFontSize(12);
-    doc.text("Data", 20, startY);
-    doc.text("Tipo", 50, startY);
-    doc.text("Ordem", 80, startY);
-    doc.text("Atividade", 110, startY);
-    doc.text("Wise", 160, startY);
-    doc.text("Mantenedor", 190, startY);
-    doc.text("Observação", 230, startY);
-
-    let currentY = startY + 10;
     rows.forEach((row) => {
         const cells = row.querySelectorAll('td');
-        doc.text(cells[0].textContent, 20, currentY);
-        doc.text(cells[1].textContent, 50, currentY);
-        doc.text(cells[2].textContent, 80, currentY);
-        doc.text(cells[3].textContent, 110, currentY);
-        doc.text(cells[4].textContent, 160, currentY);
-        doc.text(cells[5].textContent, 190, currentY);
-        doc.text(cells[6].textContent, 230, currentY, { maxWidth: 150 });
-        currentY += 10;
+        doc.text(cells[0].textContent, 20, y);
+        doc.text(cells[1].textContent, 50, y);
+        doc.text(cells[2].textContent, 80, y);
+        doc.text(cells[3].textContent, 110, y);
+        doc.text(cells[4].textContent, 160, y);
+        doc.text(cells[5].textContent, 190, y);
+        doc.text(cells[6].textContent, 230, y, { maxWidth: 150 });
+        y += 10;
 
-        if (currentY > pageHeight - 20) {
+        // Verificar se precisa adicionar uma nova página
+        if (y > 270) {
             doc.addPage();
-            currentY = 20;
+            y = 20;
+            // Adicionar cabeçalho da tabela na nova página
+            doc.text("Data", 20, y);
+            doc.text("Tipo", 50, y);
+            doc.text("Ordem", 80, y);
+            doc.text("Atividade", 110, y);
+            doc.text("Wise", 160, y);
+            doc.text("Mantenedor", 190, y);
+            doc.text("Observação", 230, y);
+            y += 10;
         }
     });
 
     doc.save('relatorio.pdf');
-                            }
+}
