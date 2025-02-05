@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Armazenamento de Relatórios</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Armazenamento de Relatórios</h1>
+        <input type="file" id="fileInput" accept=".xlsx, .xls">
+        <button onclick="importData()">Importar Dados</button>
+        <table id="reportTable">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Tipo</th>
+                    <th>Ordem</th>
+                    <th>Atividade</th>
+                    <th>Wise</th>
+                    <th>Mantenedor</th>
+                    <th>Checklist</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Linhas serão inseridas aqui -->
+            </tbody>
+        </table>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
