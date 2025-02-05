@@ -15,14 +15,14 @@ function importData() {
             const firstSheetName = workbook.SheetNames[0];
             const worksheet = workbook.Sheets[firstSheetName];
             const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
-            populateTable(jsonData);
+            populateImportedTable(jsonData);
         };
         reader.readAsArrayBuffer(file);
     }
 }
 
-function populateTable(data) {
-    const tableBody = document.querySelector('#reportTable tbody');
+function populateImportedTable(data) {
+    const tableBody = document.querySelector('#importedTable tbody');
     tableBody.innerHTML = '';
     data.forEach((row, index) => {
         if (index === 0) return; // Ignora a primeira linha (cabeçalho)
@@ -92,7 +92,7 @@ function addManualData() {
     const form = document.getElementById('manualForm');
     const data = new FormData(form);
 
-    const tableBody = document.querySelector('#reportTable tbody');
+    const tableBody = document.querySelector('#manualTable tbody');
     const tr = document.createElement('tr');
 
     const date = new Date(data.get('data'));
@@ -120,11 +120,9 @@ function addManualData() {
     mantenedorTd.textContent = data.get('mantenedor');
     tr.appendChild(mantenedorTd);
 
-    const checklistTd = document.createElement('td');
-    const checklistInput = document.createElement('input');
-    checklistInput.type = 'checkbox';
-    checklistTd.appendChild(checklistInput);
-    tr.appendChild(checklistTd);
+    const observacaoTd = document.createElement('td');
+    observacaoTd.textContent = data.get('observacao');
+    tr.appendChild(observacaoTd);
 
     const actionsTd = document.createElement('td');
     const editButton = document.createElement('button');
@@ -142,8 +140,19 @@ function addManualData() {
     form.reset();
 }
 
-function exportToExcel() {
-    const table = document.getElementById('reportTable');
-    const wb = XLSX.utils.table_to_book(table);
-    XLSX.writeFile(wb, 'relatorio.xlsx');
+function exportToPDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const table = document.getElementById('manualTable');
+    const rows = table.querySelectorAll('tr');
+
+    rows.forEach((row, index) => {
+        const cells = row.querySelectorAll('td');
+        cells.forEach((cell, cellIndex) => {
+            doc.text(cell.textContent, 10, 10 + index * 10, { maxWidth: 190 });
+        });
+    });
+
+    doc.save('relatorio.pdf');
 }
