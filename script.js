@@ -113,8 +113,9 @@ function addDataTable(doc, currentY, contentWidth) {
         );
         doc.text(
             header,
-            PDF_CONFIG.margin + (index * columnWidth) + 2,
-            currentY + rowHeight / 2 + 2
+            PDF_CONFIG.margin + (index * columnWidth) + (columnWidth / 2),
+            currentY + rowHeight / 2,
+            { align: 'center' }
         );
     });
 
@@ -145,8 +146,9 @@ function addDataTable(doc, currentY, contentWidth) {
                 );
                 doc.text(
                     header,
-                    PDF_CONFIG.margin + (index * columnWidth) + 2,
-                    currentY + rowHeight / 2 + 2
+                    PDF_CONFIG.margin + (index * columnWidth) + (columnWidth / 2),
+                    currentY + rowHeight / 2,
+                    { align: 'center' }
                 );
             });
             currentY += rowHeight;
@@ -156,9 +158,9 @@ function addDataTable(doc, currentY, contentWidth) {
             if (index < columnCount - 1) { // Ignorar a coluna de ações
                 doc.text(
                     cell.textContent,
-                    PDF_CONFIG.margin + (index * columnWidth) + 2,
-                    currentY + rowHeight / 2 + 2,
-                    { maxWidth: columnWidth - 4 }
+                    PDF_CONFIG.margin + (index * columnWidth) + (columnWidth / 2),
+                    currentY + rowHeight / 2,
+                    { align: 'center', maxWidth: columnWidth - 4 }
                 );
 
                 // Bordas da célula
