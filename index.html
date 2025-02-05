@@ -6,46 +6,71 @@
     <title>Armazenamento de Relatórios</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>Armazenamento de Relatórios</h1>
-        <input type="file" id="fileInput" accept=".xlsx, .xls">
-        <button onclick="importData()">Importar Dados</button>
-        <table id="reportTable">
-            <thead>
-                <tr>
-                    <th>Data</th>
-                    <th>Tipo</th>
-                    <th>Ordem</th>
-                    <th>Atividade</th>
-                    <th>Wise</th>
-                    <th>Mantenedor</th>
-                    <th>Checklist</th>
-                    <th>Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Linhas serão inseridas aqui -->
-            </tbody>
-        </table>
-        <h2>Adicionar Dados Manualmente</h2>
-        <form id="manualForm">
-            <label for="data">Data:</label>
-            <input type="date" id="data" name="data" required>
-            <label for="tipo">Tipo:</label>
-            <input type="text" id="tipo" name="tipo" required>
-            <label for="ordem">Ordem:</label>
-            <input type="text" id="ordem" name="ordem" required>
-            <label for="atividade">Atividade:</label>
-            <input type="text" id="atividade" name="atividade" required>
-            <label for="wise">Wise:</label>
-            <input type="text" id="wise" name="wise" required>
-            <label for="mantenedor">Mantenedor:</label>
-            <input type="text" id="mantenedor" name="mantenedor" required>
-            <button type="button" onclick="addManualData()">Adicionar</button>
-        </form>
-        <button onclick="exportToExcel()">Exportar para Excel</button>
+        <div class="section">
+            <h2>Importar Dados do Excel</h2>
+            <input type="file" id="fileInput" accept=".xlsx, .xls">
+            <button onclick="importData()">Importar Dados</button>
+            <table id="importedTable">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Ordem</th>
+                        <th>Atividade</th>
+                        <th>Wise</th>
+                        <th>Mantenedor</th>
+                        <th>Checklist</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas serão inseridas aqui -->
+                </tbody>
+            </table>
+        </div>
+        <div class="section">
+            <h2>Adicionar Dados Manualmente</h2>
+            <form id="manualForm">
+                <label for="data">Data:</label>
+                <input type="date" id="data" name="data" required>
+                <label for="tipo">Tipo:</label>
+                <input type="text" id="tipo" name="tipo" required>
+                <label for="ordem">Ordem:</label>
+                <input type="text" id="ordem" name="ordem" required>
+                <label for="atividade">Atividade:</label>
+                <input type="text" id="atividade" name="atividade" required>
+                <label for="wise">Wise:</label>
+                <input type="text" id="wise" name="wise" required>
+                <label for="mantenedor">Mantenedor:</label>
+                <input type="text" id="mantenedor" name="mantenedor" required>
+                <label for="observacao">Observação:</label>
+                <textarea id="observacao" name="observacao" required></textarea>
+                <button type="button" onclick="addManualData()">Adicionar</button>
+            </form>
+            <table id="manualTable">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Tipo</th>
+                        <th>Ordem</th>
+                        <th>Atividade</th>
+                        <th>Wise</th>
+                        <th>Mantenedor</th>
+                        <th>Observação</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Linhas serão inseridas aqui -->
+                </tbody>
+            </table>
+            <button onclick="exportToPDF()">Exportar para PDF</button>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
