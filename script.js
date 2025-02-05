@@ -1,5 +1,4 @@
 function convertSerialToDate(serial) {
-    // Converte um número serial do Excel para uma data JavaScript
     const baseDate = new Date(1899, 11, 30); // Data base do Excel (30/12/1899)
     const date = new Date(baseDate.getTime() + serial * 24 * 60 * 60 * 1000);
     return date.toLocaleDateString(); // Formata a data para o formato local
@@ -31,7 +30,6 @@ function populateTable(data) {
         row.forEach((cell, cellIndex) => {
             const td = document.createElement('td');
             if (cellIndex === 0) {
-                // Converte a primeira coluna (data)
                 td.textContent = convertSerialToDate(cell);
             } else {
                 td.textContent = cell;
@@ -88,4 +86,64 @@ function saveRow(row) {
 
 function deleteRow(row) {
     row.remove();
+}
+
+function addManualData() {
+    const form = document.getElementById('manualForm');
+    const data = new FormData(form);
+
+    const tableBody = document.querySelector('#reportTable tbody');
+    const tr = document.createElement('tr');
+
+    const date = new Date(data.get('data'));
+    const dateTd = document.createElement('td');
+    dateTd.textContent = date.toLocaleDateString();
+    tr.appendChild(dateTd);
+
+    const tipoTd = document.createElement('td');
+    tipoTd.textContent = data.get('tipo');
+    tr.appendChild(tipoTd);
+
+    const ordemTd = document.createElement('td');
+    ordemTd.textContent = data.get('ordem');
+    tr.appendChild(ordemTd);
+
+    const atividadeTd = document.createElement('td');
+    atividadeTd.textContent = data.get('atividade');
+    tr.appendChild(atividadeTd);
+
+    const wiseTd = document.createElement('td');
+    wiseTd.textContent = data.get('wise');
+    tr.appendChild(wiseTd);
+
+    const mantenedorTd = document.createElement('td');
+    mantenedorTd.textContent = data.get('mantenedor');
+    tr.appendChild(mantenedorTd);
+
+    const checklistTd = document.createElement('td');
+    const checklistInput = document.createElement('input');
+    checklistInput.type = 'checkbox';
+    checklistTd.appendChild(checklistInput);
+    tr.appendChild(checklistTd);
+
+    const actionsTd = document.createElement('td');
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Editar';
+    editButton.onclick = () => editRow(tr);
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Excluir';
+    deleteButton.onclick = () => deleteRow(tr);
+    actionsTd.appendChild(editButton);
+    actionsTd.appendChild(deleteButton);
+    tr.appendChild(actionsTd);
+
+    tableBody.appendChild(tr);
+
+    form.reset();
+}
+
+function exportToExcel() {
+    const table = document.getElementById('reportTable');
+    const wb = XLSX.utils.table_to_book(table);
+    XLSX.writeFile(wb, 'relatorio.xlsx');
 }
