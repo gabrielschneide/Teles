@@ -48,6 +48,8 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
 }
 
 .grid-form {
@@ -78,6 +80,7 @@ input, select, textarea {
     border-radius: 6px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
+    width: 100%;
 }
 
 input:focus, select:focus, textarea:focus {
@@ -95,6 +98,7 @@ input:focus, select:focus, textarea:focus {
     align-items: center;
     gap: 0.5rem;
     transition: transform 0.2s, opacity 0.2s;
+    text-decoration: none;
 }
 
 .btn:hover {
@@ -146,10 +150,16 @@ tr:hover {
     background-color: #f8f9fa;
 }
 
+.actions-cell {
+    display: flex;
+    gap: 0.5rem;
+}
+
 .actions-cell button {
-    margin: 0 0.25rem;
+    margin: 0;
     padding: 0.5rem 0.8rem;
     font-size: 0.9rem;
+    border-radius: 4px;
 }
 
 @media (max-width: 768px) {
