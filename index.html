@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-BR"> 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,24 +12,25 @@
 <body>
     <div class="container">
         <header class="main-header">
-            <h1><i class="fas fa-file-alt"></i> Gestão de Relatórios Técnicos</h1>
+            <h1><i class="fas fa-file-alt" aria-hidden="true"></i> Gestão de Relatórios Técnicos</h1>
         </header>
 
         <section class="card import-section">
             <div class="card-header">
-                <h2><i class="fas fa-file-import"></i> Importar Dados do Excel</h2>
+                <h2><i class="fas fa-file-import" aria-hidden="true"></i> Importar Dados do Excel</h2>
                 <div class="file-input-container">
                     <input type="file" id="fileInput" accept=".xlsx, .xls" hidden>
                     <label for="fileInput" class="btn primary">
-                        <i class="fas fa-upload"></i> Selecionar Arquivo
+                        <i class="fas fa-upload" aria-hidden="true"></i> Selecionar Arquivo
                     </label>
                     <button onclick="importData()" class="btn success">
-                        <i class="fas fa-file-import"></i> Importar Dados
+                        <i class="fas fa-file-import" aria-hidden="true"></i> Importar Dados
                     </button>
                 </div>
             </div>
             <div class="table-container">
-                <table id="importedTable">
+                <table id="importedTable" aria-describedby="importedTableDesc">
+                    <caption id="importedTableDesc" class="sr-only">Tabela de dados importados do Excel</caption>
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -38,8 +39,6 @@
                             <th>WISE</th>
                             <th>Mantenedor</th>
                             <th>Observações</th>
-                            <th>Checklist</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -49,7 +48,7 @@
 
         <section class="card manual-section">
             <div class="card-header">
-                <h2><i class="fas fa-edit"></i> Cadastro Manual</h2>
+                <h2><i class="fas fa-edit" aria-hidden="true"></i> Cadastro Manual</h2>
             </div>
             <form id="manualForm" class="grid-form">
                 <div class="form-group">
@@ -83,18 +82,19 @@
                 </div>
                 <div class="form-group full-width">
                     <button type="button" onclick="addManualData()" class="btn primary">
-                        <i class="fas fa-plus-circle"></i> Adicionar Registro
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i> Adicionar Registro
                     </button>
                 </div>
             </form>
 
             <div class="table-actions">
                 <button onclick="exportToPDF()" class="btn danger">
-                    <i class="fas fa-file-pdf"></i> Exportar PDF
+                    <i class="fas fa-file-pdf" aria-hidden="true"></i> Exportar PDF
                 </button>
             </div>
             <div class="table-container">
-                <table id="manualTable">
+                <table id="manualTable" aria-describedby="manualTableDesc">
+                    <caption id="manualTableDesc" class="sr-only">Tabela de dados cadastrados manualmente</caption>
                     <thead>
                         <tr>
                             <th>Data</th>
@@ -103,7 +103,6 @@
                             <th>WISE</th>
                             <th>Mantenedor</th>
                             <th>Observações</th>
-                            <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody></tbody>
